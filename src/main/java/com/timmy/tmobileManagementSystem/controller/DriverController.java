@@ -1,9 +1,10 @@
 package com.timmy.tmobileManagementSystem.controller;
 
-import com.timmy.tmobileManagementSystem.data.dtos.request.CreateDriverRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.request.DriverCreateRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.LoginRequest;
 import com.timmy.tmobileManagementSystem.service.DriverService;
 import com.timmy.tmobileManagementSystem.utils.ApiResponse;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +25,10 @@ public class DriverController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<?> signUp(@RequestBody CreateDriverRequest createDriverRequest, HttpServletRequest httpServletRequest){
+    public ResponseEntity<?> signUp(@RequestBody DriverCreateRequest driverCreateRequest, HttpServletRequest httpServletRequest) throws MessagingException {
         ApiResponse response = ApiResponse.builder()
                 .statusCode(HttpStatus.OK.value())
-                .data(driverService.driverSignUp(createDriverRequest))
+                .data(driverService.driverSignUp(driverCreateRequest))
                 .timeStamp(ZonedDateTime.now())
                 .path(httpServletRequest.getRequestURI())
                 .isSuccessful(true)

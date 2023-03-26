@@ -3,8 +3,8 @@ package com.timmy.tmobileManagementSystem.data.dtos.request;
 import lombok.Data;
 
 @Data
-public class UserLoginRequest {
+public class PassengerLoginRequest extends LoginRequest{
     private String phoneNumber;
-    private String password;
+
 
 }

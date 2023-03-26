@@ -1,9 +1,10 @@
 package com.timmy.tmobileManagementSystem.service;
 
-import com.timmy.tmobileManagementSystem.data.dtos.request.CreateDriverRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.request.DriverCreateRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.LoginRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.response.CreateDriverResponse;
-import com.timmy.tmobileManagementSystem.data.dtos.response.LoginResponse;
+import com.timmy.tmobileManagementSystem.data.dtos.response.ResponseClass;
+import jakarta.mail.MessagingException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,24 +17,24 @@ class DriverServiceImplTest {
 
     @Autowired
     private DriverService driverService;
-    private CreateDriverRequest createDriverRequest;
+    private DriverCreateRequest driverCreateRequest;
     private LoginRequest driverLoginRequest;
 
     @BeforeEach
     void setUp(){
-        createDriverRequest = new CreateDriverRequest();
-        createDriverRequest.setEmailAddress("to34pe@gmail.com");
-        createDriverRequest.setDriversLicense("343A687Dfd4");
-        createDriverRequest.setPassword("T3im$3ffhg4b");
-        createDriverRequest.setFirstName("Tope");
-        createDriverRequest.setLastName("Harry");
-        createDriverRequest.setPhoneNumber("07037175683");
+        driverCreateRequest = new DriverCreateRequest();
+        driverCreateRequest.setEmailAddress("dotunjohn@gmail.com");
+        driverCreateRequest.setDriversLicense("123456789");
+        driverCreateRequest.setPassword("password");
+        driverCreateRequest.setFirstName("Dotun");
+        driverCreateRequest.setLastName("John");
+        driverCreateRequest.setPhoneNumber("07012345678");
     }
 
     @Test
-    void test_ThatDriverCanBeCreated(){
+    void test_ThatDriverCanBeCreated() throws MessagingException {
 
-        CreateDriverResponse createDriverResponse = driverService.driverSignUp(createDriverRequest);
+        CreateDriverResponse createDriverResponse = driverService.driverSignUp(driverCreateRequest);
         assertNotNull(createDriverResponse);
         assertEquals("Driver created successfully", createDriverResponse.getMessage());
     }
@@ -42,9 +43,9 @@ class DriverServiceImplTest {
         driverLoginRequest = new LoginRequest();
         driverLoginRequest.setEmailAddress("tope@gmail.com");
         driverLoginRequest.setPassword("T3im$3ffhg4b");
-        LoginResponse createLoginResponse = driverService.login(driverLoginRequest);
+        ResponseClass createResponseClass = driverService.login(driverLoginRequest);
         assertNotNull(driverLoginRequest);
-        assertEquals("login successful", createLoginResponse.getMessage());
+        assertEquals("login successful", createResponseClass.getMessage());
     }
 
 }

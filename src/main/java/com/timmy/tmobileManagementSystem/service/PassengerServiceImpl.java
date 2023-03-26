@@ -1,9 +1,9 @@
 package com.timmy.tmobileManagementSystem.service;
 
-import com.timmy.tmobileManagementSystem.data.dtos.request.CreateUserRequest;
-import com.timmy.tmobileManagementSystem.data.dtos.request.UserLoginRequest;
-import com.timmy.tmobileManagementSystem.data.dtos.response.CreateUserResponse;
-import com.timmy.tmobileManagementSystem.data.dtos.response.UserLoginResponse;
+import com.timmy.tmobileManagementSystem.data.dtos.request.PassengerCreateRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.request.PassengerLoginRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerCreateResponse;
+import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerLoginResponse;
 import com.timmy.tmobileManagementSystem.data.models.Passenger;
 import com.timmy.tmobileManagementSystem.data.repositories.PassengerRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -12,60 +12,55 @@ import org.springframework.stereotype.Service;
 import validators.UserValidators;
 
 @Service
-public class PassengerServiceImpl implements PassengerService {
-
+public class PassengerServiceImpl implements PassengerService{
 
     @Autowired
     private PassengerRepository passengerRepository;
     @Override
-    public CreateUserResponse userSignUp(CreateUserRequest createUserRequest) {
-        if(!UserValidators.isValidPassword(createUserRequest.getPassword()))
-            throw new RuntimeException(String.format("%s invalid password", createUserRequest.getPassword()));
-        if(!UserValidators.isValidEmailAddress(createUserRequest.getEmailAddress()))
-            throw new RuntimeException(String.format("%s invalid email", createUserRequest.getEmailAddress()));
-        if(!UserValidators.isValidPhoneNumber(createUserRequest.getPhoneNumber()))
-            throw new RuntimeException(String.format("%s invalid Phone number", createUserRequest.getPhoneNumber()));
+    public PassengerCreateResponse userSignUp(PassengerCreateRequest passengerCreateRequest) {
+        if(!UserValidators.isValidPassword(passengerCreateRequest.getPassword()))
+            throw new RuntimeException(String.format("%s invalid password", passengerCreateRequest.getPassword()));
+        if(!UserValidators.isValidEmailAddress(passengerCreateRequest.getEmailAddress()))
+            throw new RuntimeException(String.format("%s invalid email", passengerCreateRequest.getEmailAddress()));
+        if(!UserValidators.isValidPhoneNumber(passengerCreateRequest.getPhoneNumber()))
+            throw new RuntimeException(String.format("%s invalid Phone number", passengerCreateRequest.getPhoneNumber()));
         Passenger passenger = new Passenger();
-        if (passengerRepository.findByEmail(createUserRequest.getEmailAddress()).isPresent())
+        if (passengerRepository.findByEmail(passengerCreateRequest.getEmailAddress()).isPresent())
             throw new RuntimeException ("Email exist");
         else
-            passenger.setEmail(createUserRequest.getEmailAddress());
+            passenger.setEmail(passengerCreateRequest.getEmailAddress());
 
-        passenger.setFirstName(createUserRequest.getFirstNumber());
-        passenger.setLastName(createUserRequest.getLastNumber());
-        if (passengerRepository.findUserByPhoneNumber(createUserRequest.getPhoneNumber()).isPresent())
+        passenger.setFirstName(passengerCreateRequest.getFirstName());
+        passenger.setLastName(passengerCreateRequest.getLastName());
+        if (passengerRepository.findUserByPhoneNumber(passengerCreateRequest.getPhoneNumber()).isPresent())
             throw new RuntimeException("phone number already exists");
         else
-            passenger.setPhoneNumber(createUserRequest.getPhoneNumber());
-        String password = BCrypt.hashpw(createUserRequest.getPassword(), BCrypt.gensalt());
+            passenger.setPhoneNumber(passengerCreateRequest.getPhoneNumber());
+        String password = BCrypt.hashpw(passengerCreateRequest.getPassword(), BCrypt.gensalt());
         passenger.setPassword(password);
 
         Passenger savedPassenger = passengerRepository.save(passenger);
 
-        CreateUserResponse createUserResponse = new CreateUserResponse();
-        createUserResponse.setMessage("sign up successful");
+        PassengerCreateResponse passengerCreateResponse = new PassengerCreateResponse();
+        passengerCreateResponse.setMessage("sign up successful");
 
-        return createUserResponse;
-
-
+        return passengerCreateResponse;
     }
 
     @Override
-    public UserLoginResponse login(UserLoginRequest loginUserRequest) {
-        Passenger findPassenger = passengerRepository.findUserByPhoneNumber(loginUserRequest.getPhoneNumber())
+    public PassengerLoginResponse login(PassengerLoginRequest passengerLoginRequest) {
+        Passenger findPassenger = passengerRepository.findUserByPhoneNumber(passengerLoginRequest.getPhoneNumber())
                 .orElseThrow(() -> new RuntimeException("phone number does not exists"));
 
-        UserLoginResponse userLoginResponse = new UserLoginResponse();
-        if (BCrypt.checkpw(loginUserRequest.getPassword(), findPassenger.getPassword())) {
-            userLoginResponse.setMessage("successful logged in");
-            return userLoginResponse;
+        PassengerLoginResponse passengerLoginResponse = new PassengerLoginResponse();
+        if (BCrypt.checkpw(passengerLoginRequest.getPassword(), findPassenger.getPassword())) {
+            passengerLoginResponse.setMessage("successful logged in");
+            return passengerLoginResponse;
         }
         else
-            userLoginResponse.setMessage("re-login");
+            passengerLoginResponse.setMessage("re-login");
 
-        return userLoginResponse;
+        return passengerLoginResponse;
     }
-
-
 
 }
