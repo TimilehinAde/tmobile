@@ -2,15 +2,17 @@ package com.timmy.tmobileManagementSystem.utils;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @Data
 @AllArgsConstructor
 @Builder
-public class ApiResponse {
+public class ApiResponse implements Serializable {
     private ZonedDateTime timeStamp;
-    private int statusCode;
-    private String path;
+    private String status;
     private  Object data;
+    private String message;
+    private String path;
     private Boolean isSuccessful;
 }

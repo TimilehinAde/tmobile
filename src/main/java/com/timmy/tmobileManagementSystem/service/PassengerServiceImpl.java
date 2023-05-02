@@ -1,50 +1,64 @@
 package com.timmy.tmobileManagementSystem.service;
 
-import com.timmy.tmobileManagementSystem.data.dtos.request.PassengerCreateRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.request.BookTripRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.request.CreatePassengerRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.PassengerLoginRequest;
-import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerCreateResponse;
+import com.timmy.tmobileManagementSystem.data.dtos.response.BookTripResponse;
+import com.timmy.tmobileManagementSystem.data.dtos.response.CreatePassengerResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerLoginResponse;
+import com.timmy.tmobileManagementSystem.data.enums.DriverStatus;
+import com.timmy.tmobileManagementSystem.data.models.Car;
+import com.timmy.tmobileManagementSystem.data.models.Driver;
 import com.timmy.tmobileManagementSystem.data.models.Passenger;
+import com.timmy.tmobileManagementSystem.data.models.Trip;
 import com.timmy.tmobileManagementSystem.data.repositories.PassengerRepository;
+import com.timmy.tmobileManagementSystem.data.repositories.TripRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import validators.UserValidators;
+
+import java.util.Optional;
 
 @Service
 public class PassengerServiceImpl implements PassengerService{
 
     @Autowired
     private PassengerRepository passengerRepository;
+    @Autowired
+    private DriverService driverService;
+
+    @Autowired
+    private TripRepository tripRepository;
     @Override
-    public PassengerCreateResponse userSignUp(PassengerCreateRequest passengerCreateRequest) {
-        if(!UserValidators.isValidPassword(passengerCreateRequest.getPassword()))
-            throw new RuntimeException(String.format("%s invalid password", passengerCreateRequest.getPassword()));
-        if(!UserValidators.isValidEmailAddress(passengerCreateRequest.getEmailAddress()))
-            throw new RuntimeException(String.format("%s invalid email", passengerCreateRequest.getEmailAddress()));
-        if(!UserValidators.isValidPhoneNumber(passengerCreateRequest.getPhoneNumber()))
-            throw new RuntimeException(String.format("%s invalid Phone number", passengerCreateRequest.getPhoneNumber()));
+    public CreatePassengerResponse passengerSignUp(CreatePassengerRequest createPassengerRequest) {
+        if(!UserValidators.isValidPassword(createPassengerRequest.getPassword()))
+            throw new RuntimeException(String.format("%s invalid password", createPassengerRequest.getPassword()));
+        if(!UserValidators.isValidEmailAddress(createPassengerRequest.getEmailAddress()))
+            throw new RuntimeException(String.format("%s invalid email", createPassengerRequest.getEmailAddress()));
+        if(!UserValidators.isValidPhoneNumber(createPassengerRequest.getPhoneNumber()))
+            throw new RuntimeException(String.format("%s invalid Phone number", createPassengerRequest.getPhoneNumber()));
         Passenger passenger = new Passenger();
-        if (passengerRepository.findByEmail(passengerCreateRequest.getEmailAddress()).isPresent())
+        if (passengerRepository.findByEmail(createPassengerRequest.getEmailAddress()).isPresent())
             throw new RuntimeException ("Email exist");
         else
-            passenger.setEmail(passengerCreateRequest.getEmailAddress());
+            passenger.setEmail(createPassengerRequest.getEmailAddress());
 
-        passenger.setFirstName(passengerCreateRequest.getFirstName());
-        passenger.setLastName(passengerCreateRequest.getLastName());
-        if (passengerRepository.findUserByPhoneNumber(passengerCreateRequest.getPhoneNumber()).isPresent())
+        passenger.setFirstName(createPassengerRequest.getFirstName());
+        passenger.setLastName(createPassengerRequest.getLastName());
+        if (passengerRepository.findUserByPhoneNumber(createPassengerRequest.getPhoneNumber()).isPresent())
             throw new RuntimeException("phone number already exists");
         else
-            passenger.setPhoneNumber(passengerCreateRequest.getPhoneNumber());
-        String password = BCrypt.hashpw(passengerCreateRequest.getPassword(), BCrypt.gensalt());
+            passenger.setPhoneNumber(createPassengerRequest.getPhoneNumber());
+        String password = BCrypt.hashpw(createPassengerRequest.getPassword(), BCrypt.gensalt());
         passenger.setPassword(password);
 
         Passenger savedPassenger = passengerRepository.save(passenger);
 
-        PassengerCreateResponse passengerCreateResponse = new PassengerCreateResponse();
-        passengerCreateResponse.setMessage("sign up successful");
+        CreatePassengerResponse createPassengerResponse = new CreatePassengerResponse();
+        createPassengerResponse.setMessage("sign up successful");
 
-        return passengerCreateResponse;
+        return createPassengerResponse;
     }
 
     @Override
@@ -61,6 +75,36 @@ public class PassengerServiceImpl implements PassengerService{
             passengerLoginResponse.setMessage("re-login");
 
         return passengerLoginResponse;
+    }
+
+    @Override
+    public BookTripResponse bookARide(BookTripRequest request) {
+        Optional<Passenger> savedPassenger = passengerRepository.findByEmail(request.getEmail().toLowerCase());
+        if (savedPassenger.isPresent()){
+            Driver assignedDriver = driverService.getDriver(request.getLocation());
+            assignedDriver.setDriverStatus(DriverStatus.AVAILABLE);
+            Trip trip = new Trip();
+            trip.setPassenger(savedPassenger.get());
+            trip.setDriver(assignedDriver);
+            Trip savedTrip = tripRepository.save(trip);
+            Car car = driverService.getCarByDriver(assignedDriver);
+            return getBookTripResponse(assignedDriver ,savedTrip, car);
+        }
+        throw new RuntimeException("passenger does not exist");
+
+    }
+
+
+    private BookTripResponse getBookTripResponse(Driver assignedDriver, Trip savedTrip, Car car) {;
+        return BookTripResponse.builder()
+                .message("assigned to a driver")
+                .driverName(assignedDriver.getFirstName())
+                .dateOfRide(savedTrip.getLocalDateTime())
+                .model(car.getModel())
+                .phoneNumber(assignedDriver.getPhoneNumber())
+                .numberPlate(car.getNumberPlate())
+                .color(car.getColor())
+                .build();
     }
 
 }

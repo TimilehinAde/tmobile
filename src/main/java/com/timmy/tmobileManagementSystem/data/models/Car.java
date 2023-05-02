@@ -17,6 +17,6 @@ public class Car {
     private String id;
     private String model;
     private String color;
-    private String plateNumber;
+    private String numberPlate;
     private Driver driver;
 }

@@ -18,6 +18,8 @@ public class Driver extends Person {
     private String driversLicense;
     @DBRef
     private Car car;
+    private boolean isEnable;
+    private Location location;
     private DriverStatus driverStatus;
 
 

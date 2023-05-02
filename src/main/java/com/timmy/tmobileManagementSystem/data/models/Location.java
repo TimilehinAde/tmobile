@@ -6,8 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
 @Document
-public class Location {
-    private String locationId;
+public class Location{
     private String latitude;
     private String longitude;
 }

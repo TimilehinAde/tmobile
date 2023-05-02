@@ -1,8 +1,8 @@
 package com.timmy.tmobileManagementSystem.service;
 
-import com.timmy.tmobileManagementSystem.data.dtos.request.PassengerCreateRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.request.CreatePassengerRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.PassengerLoginRequest;
-import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerCreateResponse;
+import com.timmy.tmobileManagementSystem.data.dtos.response.CreatePassengerResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerLoginResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,37 +16,38 @@ class PassengerServiceImplTest {
     @Autowired
     private PassengerService passengerService;
 
-    private PassengerCreateRequest passengerCreateRequest;
+    private CreatePassengerRequest createPassengerRequest;
     private PassengerLoginRequest passengerLoginRequest;
 
 
 
 @BeforeEach
     void setUp(){
-    passengerCreateRequest = new PassengerCreateRequest();
-    passengerCreateRequest.setEmailAddress("titi55@gmail.com");
-    passengerCreateRequest.setPhoneNumber("08169522465");
-    passengerCreateRequest.setFirstName("Titi");
-    passengerCreateRequest.setLastName("Deborah");
-    passengerCreateRequest.setPassword("TitiDeborah1@");
+    createPassengerRequest = new CreatePassengerRequest();
+    createPassengerRequest.setEmailAddress("johndoe1155@gmail.com");
+    createPassengerRequest.setPhoneNumber("07031234582");
+    createPassengerRequest.setFirstName("John");
+    createPassengerRequest.setLastName("Doe");
+    createPassengerRequest.setPassword("JohnDoe1@");
 
 }
 @Test
     void test_ThatUserCanBeCreated(){
-    PassengerCreateResponse passengerCreateResponse = passengerService.userSignUp(passengerCreateRequest);
-    assertNotNull(passengerCreateResponse);
-    assertEquals("sign up successful", passengerCreateResponse.getMessage());
+    CreatePassengerResponse createPassengerResponse = passengerService.passengerSignUp(createPassengerRequest);
+    assertNotNull(createPassengerResponse);
+    assertEquals("sign up successful", createPassengerResponse.getMessage());
 }
 @Test
     void test_ThatUserCanLogin(){
     passengerLoginRequest = new PassengerLoginRequest();
-    passengerLoginRequest.setPassword("TitiDeborah1@");
-    passengerLoginRequest.setPhoneNumber("08169522465");
+    passengerLoginRequest.setPassword("JohnDoe1@");
+    passengerLoginRequest.setPhoneNumber("07031234582");
 
      PassengerLoginResponse passengerLoginResponse = passengerService.login(passengerLoginRequest);
     assertNotNull(passengerLoginResponse);
     assertEquals("successful logged in", passengerLoginResponse.getMessage());
 
 }
+
 
 }

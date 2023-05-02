@@ -1,14 +1,17 @@
 package com.timmy.tmobileManagementSystem.service;
 
-import com.timmy.tmobileManagementSystem.data.dtos.request.PassengerCreateRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.request.BookTripRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.request.CreatePassengerRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.PassengerLoginRequest;
-import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerCreateResponse;
+import com.timmy.tmobileManagementSystem.data.dtos.response.BookTripResponse;
+import com.timmy.tmobileManagementSystem.data.dtos.response.CreatePassengerResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerLoginResponse;
-import org.springframework.stereotype.Service;
 
 
 public interface PassengerService {
 
-    PassengerCreateResponse userSignUp(PassengerCreateRequest passengerCreateRequest);
+    CreatePassengerResponse passengerSignUp(CreatePassengerRequest createPassengerRequest);
     PassengerLoginResponse login(PassengerLoginRequest passengerLoginRequest);
+    BookTripResponse bookARide(BookTripRequest request);
+    //Car getCarByDriver(Driver assignedDriver);
 }

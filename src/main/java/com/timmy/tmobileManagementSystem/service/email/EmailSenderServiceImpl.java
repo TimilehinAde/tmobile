@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,9 +17,9 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     private JavaMailSender javaMailSender;
 
 
-//    public EmailSenderServiceImpl(JavaMailSender javaMailSender){
-//        this.javaMailSender = javaMailSender;
-//    }
+    public EmailSenderServiceImpl(JavaMailSender javaMailSender){
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
     public void send(String toEmail, String email) throws MessagingException {
@@ -39,6 +40,28 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             log.info("problem 2 "+ e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+    @Async
+    @Override
+    public void sendEmail(String recipientEmail, String name, String link) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setFrom("pelumijsh@gmail.com");
+        helper.setTo(recipientEmail);
+        String subject = "Here's the token to reset your password";
+
+        String content = "<p>Hello,</p>" + name
+                + "<p>You have requested to reset your password.</p>"
+                + "<p>Copy the token below to change your password:</p>"
+                + link
+                + "<p>Ignore this email if you do remember your password, "
+                + "or you have not made the request.</p>";
+
+        helper.setSubject(subject);
+
+        helper.setText(content, true);
+
+        javaMailSender.send(message);
     }
     public String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -98,7 +121,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
                 "        \n" +
                 "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\">" +
                 "<p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">" +
-                " <p>"+ link + " </p> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
+                " <p>"+ link + " </p> </p></blockquote>\n Link will expire in 10 minutes. <p>See you soon</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +

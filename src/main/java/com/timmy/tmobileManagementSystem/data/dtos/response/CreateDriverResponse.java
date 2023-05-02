@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class CreateDriverResponse extends ResponseClass{
-    private String token;
+    private int id;
+
 }

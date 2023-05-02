@@ -1,6 +1,6 @@
 package com.timmy.tmobileManagementSystem.controller;
 
-import com.timmy.tmobileManagementSystem.data.dtos.request.DriverCreateRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.request.CreateDriverRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.LoginRequest;
 import com.timmy.tmobileManagementSystem.service.DriverService;
 import com.timmy.tmobileManagementSystem.utils.ApiResponse;
@@ -8,15 +8,13 @@ import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.ZonedDateTime;
 
 @RestController
 @RequestMapping(path = "/api/v1/Driver")
+@CrossOrigin(origins = "*")
 public class DriverController {
     private final DriverService driverService;
 
@@ -25,10 +23,10 @@ public class DriverController {
     }
 
     @PostMapping("/signUp")
-    public ResponseEntity<?> signUp(@RequestBody DriverCreateRequest driverCreateRequest, HttpServletRequest httpServletRequest) throws MessagingException {
+    public ResponseEntity<?> signUp(@RequestBody CreateDriverRequest createDriverRequest, HttpServletRequest httpServletRequest) throws MessagingException {
         ApiResponse response = ApiResponse.builder()
-                .statusCode(HttpStatus.OK.value())
-                .data(driverService.driverSignUp(driverCreateRequest))
+                .status("success")
+                .data(driverService.driverSignUp(createDriverRequest))
                 .timeStamp(ZonedDateTime.now())
                 .path(httpServletRequest.getRequestURI())
                 .isSuccessful(true)
@@ -38,7 +36,7 @@ public class DriverController {
     @PostMapping("login")
     public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request, HttpServletRequest httpServletRequest)  {
         ApiResponse response = ApiResponse.builder()
-                .statusCode(HttpStatus.OK.value())
+                .status("success")
                 .data(driverService.login(request))
                 .timeStamp(ZonedDateTime.now())
                 .path(httpServletRequest.getRequestURI())
