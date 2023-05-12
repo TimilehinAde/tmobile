@@ -32,6 +32,7 @@ public class PassengerServiceImpl implements PassengerService{
     private DriverService driverService;
     @Autowired
     OtpTokenRepository otpTokenRepository;
+    @Autowired
     EmailSenderService emailSenderService;
 
     @Autowired
@@ -76,6 +77,11 @@ public class PassengerServiceImpl implements PassengerService{
         return createPassengerResponse;
 
     }
+    @Override
+    public void enablePassenger(Passenger passenger) {
+        passenger.setEnable(true);
+        passengerRepository.save(passenger);
+    }
 
 
 
@@ -112,11 +118,7 @@ public class PassengerServiceImpl implements PassengerService{
         throw new RuntimeException("passenger does not exist");
 
     }
-    @Override
-    public void enablePassenger(Passenger passenger) {
-        passenger.setEnable(true);
-        passengerRepository.save(passenger);
-    }
+
 
     private BookTripResponse getBookTripResponse(Driver assignedDriver, Trip savedTrip, Car car) {;
         return BookTripResponse.builder()

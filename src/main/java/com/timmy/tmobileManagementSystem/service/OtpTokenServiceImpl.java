@@ -23,6 +23,7 @@ public class OtpTokenServiceImpl implements OtpTokenService {
     @Autowired
     private DriverService driverService;
 
+    @Autowired
     private PassengerService passengerService;
 
 

@@ -18,7 +18,7 @@ import java.util.Set;
 @Document
 public class Passenger extends Person{
     @Id
-    private String Id;
+    private String id;
 
     @DBRef
     private Set<Card> userCards = new HashSet<>();

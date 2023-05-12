@@ -19,7 +19,6 @@ public class Driver extends Person {
 
     @DBRef
     private Car car;
-    private String location;
     private DriverStatus driverStatus;
 
 
