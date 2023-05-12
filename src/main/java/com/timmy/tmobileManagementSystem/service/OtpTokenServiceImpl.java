@@ -23,6 +23,8 @@ public class OtpTokenServiceImpl implements OtpTokenService {
     @Autowired
     private DriverService driverService;
 
+    private PassengerService passengerService;
+
 
 
     @Override
@@ -39,4 +41,19 @@ public class OtpTokenServiceImpl implements OtpTokenService {
         otpTokenRepository.save(foundToken);
         return "verified";
     }
+
+    public String verifyPassengerOtp(VerifyOtpRequest verifyOtpRequest) {
+
+        OtpToken foundToken = otpTokenRepository.findByToken(verifyOtpRequest.getToken())
+                .orElseThrow(() -> new RuntimeException("token doesn't exist"));
+        if (foundToken.getConfirmAt() != null)
+            throw new RuntimeException("Token has been used");
+        if (foundToken.getExpiredAt().isBefore(LocalDateTime.now()))
+            throw new RuntimeException("Token has expired");
+        foundToken.setConfirmAt(LocalDateTime.now());
+        passengerService.enablePassenger(foundToken.getPassenger());
+        otpTokenRepository.save(foundToken);
+        return "verified";
+    }
 }
+

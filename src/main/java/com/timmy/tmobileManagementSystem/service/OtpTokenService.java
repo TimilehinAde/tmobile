@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface OtpTokenService  {
     String verifyOtp(VerifyOtpRequest verifyOtpRequest);
 
+    String verifyPassengerOtp(VerifyOtpRequest verifyOtpRequest);
 }

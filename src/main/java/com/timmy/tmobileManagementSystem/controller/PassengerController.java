@@ -2,6 +2,7 @@ package com.timmy.tmobileManagementSystem.controller;
 
 import com.timmy.tmobileManagementSystem.data.dtos.request.*;
 import com.timmy.tmobileManagementSystem.data.dtos.response.BookTripResponse;
+import com.timmy.tmobileManagementSystem.service.OtpTokenService;
 import com.timmy.tmobileManagementSystem.service.PassengerService;
 import com.timmy.tmobileManagementSystem.utils.ApiResponse;
 import jakarta.mail.MessagingException;
@@ -20,6 +21,8 @@ import java.time.ZonedDateTime;
 public class PassengerController {
     private final PassengerService passengerService;
 
+    private OtpTokenService otpTokenService;
+
     public PassengerController(PassengerService passengerService) {
         this.passengerService = passengerService;
     }
@@ -33,6 +36,16 @@ public class PassengerController {
                 .isSuccessful(true)
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/verifytoken")
+    public ResponseEntity<ApiResponse> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) {
+        otpTokenService.verifyPassengerOtp(verifyOtpRequest);
+        ApiResponse response = ApiResponse.builder()
+                .status("Okay")
+                .message("Verification is successful")
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
     @PostMapping("login")
     public ResponseEntity<ApiResponse> login(@RequestBody PassengerLoginRequest passengerLoginRequest, HttpServletRequest httpServletRequest)  {

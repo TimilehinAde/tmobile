@@ -40,7 +40,7 @@ public class DriverController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping("/verifytoken")
-    public ResponseEntity<?> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) {
+    public ResponseEntity<ApiResponse> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) {
         otpTokenService.verifyOtp(verifyOtpRequest);
         ApiResponse response = ApiResponse.builder()
                 .status("Okay")

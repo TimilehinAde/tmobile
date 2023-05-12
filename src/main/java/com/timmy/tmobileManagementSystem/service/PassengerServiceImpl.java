@@ -7,17 +7,20 @@ import com.timmy.tmobileManagementSystem.data.dtos.response.BookTripResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.CreatePassengerResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerLoginResponse;
 import com.timmy.tmobileManagementSystem.data.enums.DriverStatus;
-import com.timmy.tmobileManagementSystem.data.models.Car;
-import com.timmy.tmobileManagementSystem.data.models.Driver;
-import com.timmy.tmobileManagementSystem.data.models.Passenger;
-import com.timmy.tmobileManagementSystem.data.models.Trip;
+import com.timmy.tmobileManagementSystem.data.models.*;
+import com.timmy.tmobileManagementSystem.data.repositories.OtpTokenRepository;
 import com.timmy.tmobileManagementSystem.data.repositories.PassengerRepository;
 import com.timmy.tmobileManagementSystem.data.repositories.TripRepository;
+import com.timmy.tmobileManagementSystem.service.email.EmailSenderService;
+import jakarta.mail.MessagingException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import validators.UserValidators;
 
+import java.security.SecureRandom;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -27,11 +30,14 @@ public class PassengerServiceImpl implements PassengerService{
     private PassengerRepository passengerRepository;
     @Autowired
     private DriverService driverService;
+    @Autowired
+    OtpTokenRepository otpTokenRepository;
+    EmailSenderService emailSenderService;
 
     @Autowired
     private TripRepository tripRepository;
     @Override
-    public CreatePassengerResponse passengerSignUp(CreatePassengerRequest createPassengerRequest) {
+    public CreatePassengerResponse passengerSignUp(CreatePassengerRequest createPassengerRequest) throws MessagingException {
         if(!UserValidators.isValidPassword(createPassengerRequest.getPassword()))
             throw new RuntimeException(String.format("%s invalid password", createPassengerRequest.getPassword()));
         if(!UserValidators.isValidEmailAddress(createPassengerRequest.getEmail()))
@@ -54,11 +60,21 @@ public class PassengerServiceImpl implements PassengerService{
         passenger.setPassword(password);
 
         Passenger savedPassenger = passengerRepository.save(passenger);
+        String token = new DecimalFormat("0000").format(new SecureRandom().nextInt(9999));
+        OtpToken otpToken = new OtpToken();
+        otpToken.setToken(token);
+        otpToken.setCreatedAt(LocalDateTime.now());
+        otpToken.setExpiredAt(LocalDateTime.now().plusMinutes(10));
+        otpToken.setPassenger(savedPassenger);
+        otpTokenRepository.save(otpToken);
+        emailSenderService.send(savedPassenger.getEmail(), emailSenderService.buildEmail(savedPassenger.getFirstName(),token)); ;
 
         CreatePassengerResponse createPassengerResponse = new CreatePassengerResponse();
         createPassengerResponse.setMessage("sign up successful");
+        createPassengerResponse.setStatusCode(201);
 
         return createPassengerResponse;
+
     }
 
 
@@ -113,5 +129,6 @@ public class PassengerServiceImpl implements PassengerService{
                 .color(car.getColor())
                 .build();
     }
+
 
 }

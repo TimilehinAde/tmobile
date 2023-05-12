@@ -7,11 +7,12 @@ import com.timmy.tmobileManagementSystem.data.dtos.response.BookTripResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.CreatePassengerResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerLoginResponse;
 import com.timmy.tmobileManagementSystem.data.models.Passenger;
+import jakarta.mail.MessagingException;
 
 
 public interface PassengerService {
 
-    CreatePassengerResponse passengerSignUp(CreatePassengerRequest createPassengerRequest);
+    CreatePassengerResponse passengerSignUp(CreatePassengerRequest createPassengerRequest) throws MessagingException;
     void enablePassenger(Passenger passenger);
     PassengerLoginResponse login(PassengerLoginRequest passengerLoginRequest);
     BookTripResponse bookARide(BookTripRequest request);
