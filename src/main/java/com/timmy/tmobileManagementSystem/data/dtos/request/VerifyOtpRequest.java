@@ -5,9 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 @Data
 public class VerifyOtpRequest {
-    @NotNull
+
     private String token;
-    @NotNull
-    private String email;
+
 
 }

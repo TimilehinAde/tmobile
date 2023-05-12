@@ -41,28 +41,28 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             throw new RuntimeException(e);
         }
     }
-    @Async
-    @Override
-    public void sendEmail(String recipientEmail, String name, String link) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setFrom("pelumijsh@gmail.com");
-        helper.setTo(recipientEmail);
-        String subject = "Here's the token to reset your password";
-
-        String content = "<p>Hello,</p>" + name
-                + "<p>You have requested to reset your password.</p>"
-                + "<p>Copy the token below to change your password:</p>"
-                + link
-                + "<p>Ignore this email if you do remember your password, "
-                + "or you have not made the request.</p>";
-
-        helper.setSubject(subject);
-
-        helper.setText(content, true);
-
-        javaMailSender.send(message);
-    }
+    //@Async
+//    @Override
+//    public void sendEmail(String recipientEmail, String name, String link) throws MessagingException {
+//        MimeMessage message = javaMailSender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(message);
+//        helper.setFrom("pelumijsh@gmail.com");
+//        helper.setTo(recipientEmail);
+//        String subject = "Here's the token to reset your password";
+//
+//        String content = "<p>Hello,</p>" + name
+//                + "<p>You have requested to reset your password.</p>"
+//                + "<p>Copy the token below to change your password:</p>"
+//                + link
+//                + "<p>Ignore this email if you do remember your password, "
+//                + "or you have not made the request.</p>";
+//
+//        helper.setSubject(subject);
+//
+//        helper.setText(content, true);
+//
+//        javaMailSender.send(message);
+//    }
     public String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
                 "\n" +

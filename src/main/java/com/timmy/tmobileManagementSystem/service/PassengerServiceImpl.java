@@ -34,15 +34,15 @@ public class PassengerServiceImpl implements PassengerService{
     public CreatePassengerResponse passengerSignUp(CreatePassengerRequest createPassengerRequest) {
         if(!UserValidators.isValidPassword(createPassengerRequest.getPassword()))
             throw new RuntimeException(String.format("%s invalid password", createPassengerRequest.getPassword()));
-        if(!UserValidators.isValidEmailAddress(createPassengerRequest.getEmailAddress()))
-            throw new RuntimeException(String.format("%s invalid email", createPassengerRequest.getEmailAddress()));
+        if(!UserValidators.isValidEmailAddress(createPassengerRequest.getEmail()))
+            throw new RuntimeException(String.format("%s invalid email", createPassengerRequest.getEmail()));
         if(!UserValidators.isValidPhoneNumber(createPassengerRequest.getPhoneNumber()))
             throw new RuntimeException(String.format("%s invalid Phone number", createPassengerRequest.getPhoneNumber()));
         Passenger passenger = new Passenger();
-        if (passengerRepository.findByEmail(createPassengerRequest.getEmailAddress()).isPresent())
+        if (passengerRepository.findByEmail(createPassengerRequest.getEmail()).isPresent())
             throw new RuntimeException ("Email exist");
         else
-            passenger.setEmail(createPassengerRequest.getEmailAddress());
+            passenger.setEmail(createPassengerRequest.getEmail());
 
         passenger.setFirstName(createPassengerRequest.getFirstName());
         passenger.setLastName(createPassengerRequest.getLastName());

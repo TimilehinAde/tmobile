@@ -1,5 +1,6 @@
 package com.timmy.tmobileManagementSystem.data.dtos.request;
 
+import com.timmy.tmobileManagementSystem.data.models.Driver;
 import com.timmy.tmobileManagementSystem.data.models.Location;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -24,7 +24,7 @@ class PassengerServiceImplTest {
 @BeforeEach
     void setUp(){
     createPassengerRequest = new CreatePassengerRequest();
-    createPassengerRequest.setEmailAddress("johndoe1155@gmail.com");
+    createPassengerRequest.setEmail("johnoe1155@gmail.com");
     createPassengerRequest.setPhoneNumber("07031234582");
     createPassengerRequest.setFirstName("John");
     createPassengerRequest.setLastName("Doe");
