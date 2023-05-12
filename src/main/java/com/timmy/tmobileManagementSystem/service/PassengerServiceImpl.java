@@ -61,6 +61,8 @@ public class PassengerServiceImpl implements PassengerService{
         return createPassengerResponse;
     }
 
+
+
     @Override
     public PassengerLoginResponse login(PassengerLoginRequest passengerLoginRequest) {
         Passenger findPassenger = passengerRepository.findUserByPhoneNumber(passengerLoginRequest.getPhoneNumber())
@@ -86,6 +88,7 @@ public class PassengerServiceImpl implements PassengerService{
             Trip trip = new Trip();
             trip.setPassenger(savedPassenger.get());
             trip.setDriver(assignedDriver);
+            trip.setLocation(request.getLocation());
             Trip savedTrip = tripRepository.save(trip);
             Car car = driverService.getCarByDriver(assignedDriver);
             return getBookTripResponse(assignedDriver ,savedTrip, car);
@@ -93,7 +96,11 @@ public class PassengerServiceImpl implements PassengerService{
         throw new RuntimeException("passenger does not exist");
 
     }
-
+    @Override
+    public void enablePassenger(Passenger passenger) {
+        passenger.setEnable(true);
+        passengerRepository.save(passenger);
+    }
 
     private BookTripResponse getBookTripResponse(Driver assignedDriver, Trip savedTrip, Car car) {;
         return BookTripResponse.builder()

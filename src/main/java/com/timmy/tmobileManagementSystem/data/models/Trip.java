@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
@@ -19,8 +20,10 @@ public class Trip {
     private String id;
     private String pickUpAddress;
     private String dropOffAddress;
-    private Location location;
+    private String location;
+    @DBRef
     private Passenger passenger;
+    @DBRef
     private Driver driver;
     private int price;
     private LocalDateTime localDateTime = LocalDateTime.now();

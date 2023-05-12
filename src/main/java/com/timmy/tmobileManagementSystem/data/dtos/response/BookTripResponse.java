@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class BookTripResponse {
-    private String message;
-    private LocalDateTime dateOfRide;
     private String driverName;
     private String phoneNumber;
     private String model;
+    private String message;
     private String numberPlate;
     private String color;
+    private LocalDateTime dateOfRide;
 }

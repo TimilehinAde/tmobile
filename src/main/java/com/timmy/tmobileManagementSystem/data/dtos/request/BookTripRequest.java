@@ -15,5 +15,5 @@ public class BookTripRequest {
     private String pickUpAddress;
     private String dropOffAddress;
     private String email;
-    private Location location;
+    private String location;
 }

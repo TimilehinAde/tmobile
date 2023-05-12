@@ -1,8 +1,10 @@
 package com.timmy.tmobileManagementSystem.service;
 
+import com.timmy.tmobileManagementSystem.data.dtos.request.CarRegistrationRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.CreateDriverRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.LoginRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.VerifyOtpRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.response.CarRegistrationResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.CreateDriverResponse;
 import com.timmy.tmobileManagementSystem.data.enums.DriverStatus;
 import com.timmy.tmobileManagementSystem.data.models.Car;
@@ -25,6 +27,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -70,6 +73,7 @@ public class DriverServiceImpl implements DriverService {
         driver.setFirstName(createDriver.getFirstName());
         driver.setLastName(createDriver.getLastName());
         driver.setPhoneNumber(createDriver.getPhoneNumber());
+        driver.setLocation(createDriver.getLocation());
         driver.setDriverStatus(DriverStatus.AVAILABLE);
 
         Driver savedDriver = driverRepository.save(driver);
@@ -115,7 +119,7 @@ public class DriverServiceImpl implements DriverService {
 //    }
     @Override
     public String login(LoginRequest loginRequest) {
-        Driver findDriver = driverRepository.findByEmail(loginRequest.getEmailAddress())
+        Driver findDriver = driverRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new RuntimeException("email not found"));
         if (!findDriver.isEnable()) return "please verify with otp";
         if (BCrypt.checkpw(loginRequest.getPassword(), findDriver.getPassword()))
@@ -127,11 +131,12 @@ public class DriverServiceImpl implements DriverService {
 
 
         @Override
-        public Driver getDriver (Location location){
+        public Driver getDriver (String location){
             List<Driver> drivers = driverRepository.findDriverByLocation(location);
             List<Driver> availableDriver = new ArrayList<>();
             for (Driver driver : drivers) {
                 if (driver.getDriverStatus().equals(DriverStatus.AVAILABLE)) {
+                    driver.setDriverStatus(DriverStatus.ON_RIDE);
                     availableDriver.add(driver);
                 }
             }
@@ -146,5 +151,30 @@ public class DriverServiceImpl implements DriverService {
         public Car getCarByDriver (Driver driver){
             return carRepository.findById(driver).orElseThrow(() -> new RuntimeException("Car not found"));
         }
+
+    @Override
+    public CarRegistrationResponse carRegister(CarRegistrationRequest request) {
+        Optional<Driver> driver =driverRepository.findByEmail(request.getEmail().toLowerCase());
+        if (driver.isPresent()){
+            Optional<Car> savedCar = carRepository.findByDriverId(driver.get().getId());
+            if(savedCar.isEmpty()){
+                Car car = new Car();
+
+                car.setModel(request.getModel());
+                car.setColor(request.getColor());
+                car.setNumberPlate(request.getNumberPlate());
+                car.setDriver(driver.get());
+                carRepository.save(car);
+
+                CarRegistrationResponse carRegistrationResponse = new CarRegistrationResponse();
+                carRegistrationResponse.setMessage("car registered");
+
+                return carRegistrationResponse;
+            }
+            throw new IllegalStateException("you can't register");
+        }
+        throw new IllegalStateException("Invalid details");
+    }
+
 
 }

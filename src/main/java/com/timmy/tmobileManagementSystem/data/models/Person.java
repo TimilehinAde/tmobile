@@ -17,6 +17,7 @@ public class Person {
     private String phoneNumber;
     private String address;
     private String password;
+    private boolean isEnable;
 
 
 }

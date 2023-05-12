@@ -45,7 +45,7 @@ public class PassengerController {
                 .build();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @GetMapping("/bookRide")
+    @PostMapping("/bookRide")
     public ResponseEntity<?> bookARide(@RequestBody BookTripRequest request, HttpServletRequest httpServletRequest ) {
         log.info("Order a ride request ===> {}", request);
         //BookTripResponse dto = passengerService.bookARide(request);

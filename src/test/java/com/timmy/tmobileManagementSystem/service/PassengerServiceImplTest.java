@@ -1,7 +1,9 @@
 package com.timmy.tmobileManagementSystem.service;
 
+import com.timmy.tmobileManagementSystem.data.dtos.request.BookTripRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.CreatePassengerRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.PassengerLoginRequest;
+import com.timmy.tmobileManagementSystem.data.dtos.response.BookTripResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.CreatePassengerResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.PassengerLoginResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,7 +48,19 @@ class PassengerServiceImplTest {
      PassengerLoginResponse passengerLoginResponse = passengerService.login(passengerLoginRequest);
     assertNotNull(passengerLoginResponse);
     assertEquals("successful logged in", passengerLoginResponse.getMessage());
+}
 
+@Test
+    void test_ThatPassengerCanBookRide(){
+    BookTripRequest bookTripRequest = new BookTripRequest();
+    bookTripRequest.setEmail("johnoe1155@gmail.com");
+    bookTripRequest.setLocation("Mushin");
+    bookTripRequest.setDropOffAddress("312 herbert marculay, yaba");
+    bookTripRequest.setPickUpAddress("no 13 oluaina street");
+
+    BookTripResponse bookTripResponse = passengerService.bookARide(bookTripRequest);
+    assertNotNull(bookTripResponse);
+    assertEquals("assigned to a driver", bookTripResponse.getMessage());
 }
 
 

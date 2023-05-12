@@ -19,6 +19,7 @@ import java.util.Set;
 public class Passenger extends Person{
     @Id
     private String Id;
+
     @DBRef
     private Set<Card> userCards = new HashSet<>();
     private ArrayList<Integer> currentPosition = new ArrayList<>();

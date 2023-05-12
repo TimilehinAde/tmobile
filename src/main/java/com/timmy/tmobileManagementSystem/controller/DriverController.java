@@ -1,5 +1,6 @@
 package com.timmy.tmobileManagementSystem.controller;
 
+import com.timmy.tmobileManagementSystem.data.dtos.request.CarRegistrationRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.CreateDriverRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.LoginRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.VerifyOtpRequest;
@@ -60,5 +61,16 @@ public class DriverController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PostMapping("/carReg")
+    public ResponseEntity<ApiResponse> carRegister(@RequestBody CarRegistrationRequest request, HttpServletRequest httpServletRequest)  {
+        ApiResponse response = ApiResponse.builder()
+                .status("success")
+                .data(driverService.carRegister(request))
+                .timeStamp(ZonedDateTime.now())
+                .path(httpServletRequest.getRequestURI())
+                .isSuccessful(true)
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 }
