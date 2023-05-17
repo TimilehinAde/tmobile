@@ -11,5 +11,5 @@ public interface CarRepository extends MongoRepository<Car, String> {
     Optional<Car> findByDriverId(String id);
 
 
-    Optional<Car> findById(Driver driver);
+    Optional<Car> findByDriver(Driver driver);
 }

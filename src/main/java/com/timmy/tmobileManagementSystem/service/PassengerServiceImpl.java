@@ -111,6 +111,7 @@ public class PassengerServiceImpl implements PassengerService{
             trip.setPassenger(savedPassenger.get());
             trip.setDriver(assignedDriver);
             trip.setLocation(request.getLocation());
+
             Trip savedTrip = tripRepository.save(trip);
             Car car = driverService.getCarByDriver(assignedDriver);
             return getBookTripResponse(assignedDriver ,savedTrip, car);

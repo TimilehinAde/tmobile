@@ -22,7 +22,7 @@ public class Passenger extends Person{
 
     @DBRef
     private Set<Card> userCards = new HashSet<>();
-    private ArrayList<Integer> currentPosition = new ArrayList<>();
+    //private ArrayList<Integer> currentPosition = new ArrayList<>();
     private List<Payment> paymentList = new ArrayList<>();
 
 }

@@ -3,12 +3,10 @@ package com.timmy.tmobileManagementSystem.service;
 import com.timmy.tmobileManagementSystem.data.dtos.request.CarRegistrationRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.CreateDriverRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.request.LoginRequest;
-import com.timmy.tmobileManagementSystem.data.dtos.request.VerifyOtpRequest;
 import com.timmy.tmobileManagementSystem.data.dtos.response.CarRegistrationResponse;
 import com.timmy.tmobileManagementSystem.data.dtos.response.CreateDriverResponse;
 import com.timmy.tmobileManagementSystem.data.enums.DriverStatus;
 import com.timmy.tmobileManagementSystem.data.models.Car;
-import com.timmy.tmobileManagementSystem.data.models.Location;
 import com.timmy.tmobileManagementSystem.data.models.OtpToken;
 import com.timmy.tmobileManagementSystem.data.models.Driver;
 import com.timmy.tmobileManagementSystem.data.repositories.CarRepository;
@@ -149,7 +147,7 @@ public class DriverServiceImpl implements DriverService {
 
         @Override
         public Car getCarByDriver (Driver driver){
-            return carRepository.findById(driver).orElseThrow(() -> new RuntimeException("Car not found"));
+            return carRepository.findByDriver(driver).orElseThrow(() -> new RuntimeException("Car not found"));
         }
 
     @Override

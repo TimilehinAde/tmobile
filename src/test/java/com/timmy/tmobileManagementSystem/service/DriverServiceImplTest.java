@@ -45,14 +45,14 @@ class DriverServiceImplTest {
     @Test
     void test_ThatOtpIsVerified(){
        VerifyOtpRequest  verifyOtpRequest= new VerifyOtpRequest();
-       verifyOtpRequest.setToken("8048");
+       verifyOtpRequest.setToken("2159");
        otpTokenService.verifyOtp(verifyOtpRequest);
 
     }
     @Test
     void test_ThatDriverCanLogin(){
        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setEmailAddress("cuubfonjohn@gmail.com");
+        loginRequest.setEmail("cuubfonjohn@gmail.com");
         loginRequest.setPassword("password");
         String loginResponse =  driverService.login(loginRequest);
         assertNotNull(loginResponse);

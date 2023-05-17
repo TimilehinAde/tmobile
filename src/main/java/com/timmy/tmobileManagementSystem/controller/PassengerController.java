@@ -41,7 +41,7 @@ public class PassengerController {
     }
 
     @PostMapping("/verifytoken")
-    public ResponseEntity<ApiResponse> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) {
+    public ResponseEntity<?> verifyOtp(@RequestBody VerifyOtpRequest verifyOtpRequest) {
         otpTokenService.verifyPassengerOtp(verifyOtpRequest);
         ApiResponse response = ApiResponse.builder()
                 .status("Okay")
@@ -50,7 +50,7 @@ public class PassengerController {
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
     @PostMapping("login")
-    public ResponseEntity<ApiResponse> login(@RequestBody PassengerLoginRequest passengerLoginRequest, HttpServletRequest httpServletRequest)  {
+    public ResponseEntity<?> login(@RequestBody PassengerLoginRequest passengerLoginRequest, HttpServletRequest httpServletRequest)  {
         ApiResponse response = ApiResponse.builder()
                 .status("success")
                 .data(passengerService.login(passengerLoginRequest))
